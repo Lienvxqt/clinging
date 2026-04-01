@@ -1,42 +1,98 @@
-import sys
-from PyQt6 import *
-from PyQt6.QtWidgets import QWidget, QApplication, QLabel, QPushButton
+import sys, random, time
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
 
-
-class window(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Цепляясь")
-        self.setGeometry(300, 300, 800, 600)
-        self.setUpMainWindow()
+        self.setGeometry(0, 0, 800, 600)
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+        self.vbox = QVBoxLayout(self.central_widget)
+        self.gui_main_window()
 
-    def setUpMainWindow(self):
+    def gui_main_window(self): 
+        self.clear_window()
         label = QLabel("Цепляясь", self)
-        label.move(380, 200)
-
-        Start_Button = QPushButton("Начать новую игру", self)
-        Start_Button.move(350, 350)
-        Start_Button.clicked.connect(self.Start_eve)
-
-        Load_Button = QPushButton("Загрузить", self)
-        Load_Button.move(370, 400)
-        Load_Button.clicked.connect(self.Load_eve)
-        
+        Start_Menu_Button = QPushButton("Начать новую игру", self)
+        Start_Menu_Button.clicked.connect(self.gui_screen_Start)
+        Load_Menu_Button = QPushButton("Загрузить", self)
+        Load_Menu_Button.clicked.connect(self.gui_screen_Load)
+        Settings_Menu_Button = QPushButton("Настройки", self)
+        Settings_Menu_Button.clicked.connect(self.gui_screen_Settings) 
         Exit_Button = QPushButton("Выйти", self)
-        Exit_Button.move(370, 450)
-        Exit_Button.clicked.connect(self.Exit_Button_eve)
-    
-    def Start_eve(self):
-        print("В процессе разработки...")
+        Exit_Button.clicked.connect(self.Exit_Button_event)
+        self.vbox.addWidget(label, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.vbox.addWidget(Start_Menu_Button, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.vbox.addWidget(Load_Menu_Button, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.vbox.addWidget(Settings_Menu_Button, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.vbox.addWidget(Exit_Button, alignment=Qt.AlignmentFlag.AlignCenter)
 
-    def Load_eve(self):
-        print("В процессе разработки...")
+    def clear_window(self):
+        while self.vbox.count():
+            item = self.vbox.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
-    def Exit_Button_eve(self):
+    def gui_screen_Settings(self):
+        self.clear_window()
+        ToMain_Button = QPushButton("Назад")
+        ToMain_Button.clicked.connect(self.gui_main_window)
+        self.vbox.addWidget(ToMain_Button, alignment=Qt.AlignmentFlag.AlignCenter)
+
+    def gui_screen_Start(self):
+        self.clear_window()
+        label = QLabel("Выберите начальный предмет")
+        Item_Pick_List = QComboBox()
+        Item_Pick_List.setPlaceholderText("Выбери начальный предмет")
+        Item_Pick_List.addItems(
+            ["Ничего", "Броня", "Оружие", "Хлеб"]
+            )
+        Item_Pick_Button = QPushButton("Выбрать предмет")
+        current_item_index = Item_Pick_List.currentIndex()
+        current_item = "Ничего"
+        inventory = []
+        def current_item_change(self):
+            print(Item_Pick_List.currentIndex())
+            
+        Item_Pick_List.currentIndexChanged.connect(current_item_change)
+        def start(self):
+            if current_item_index == 0:
+                inventory.append("Ничего")
+            elif current_item_index == 1:
+                inventory.append("Броня")
+            elif current_item_index == 2:
+                inventory.append("Оружие")
+            elif current_item_index == 3:
+                inventory.append("Хлеб")
+            print(inventory)
+        
+            self.gui_main_window
+        # Продолжать тут
+        Item_Pick_Button.clicked.connect(start)
+        ToMain_Button = QPushButton("Назад")
+        ToMain_Button.clicked.connect(self.gui_main_window)
+        self.vbox.addWidget(label, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.vbox.addWidget(Item_Pick_List, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.vbox.addWidget(Item_Pick_Button, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.vbox.addWidget(ToMain_Button, alignment=Qt.AlignmentFlag.AlignCenter)
+
+    def gui_screen_Load(self):
+        self.clear_window()
+        label = QLabel("Выберите сохранение (В разработке)")
+        ToMain_Button = QPushButton("Назад")
+        ToMain_Button.clicked.connect(self.gui_main_window)
+        self.vbox.addWidget(label, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.vbox.addWidget(ToMain_Button, alignment=Qt.AlignmentFlag.AlignCenter)
+
+    def Exit_Button_event(self):
         self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = window()
+    window = MainWindow()
     window.show()
     sys.exit(app.exec())
