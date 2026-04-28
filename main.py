@@ -1,7 +1,8 @@
-import sys, random
+import sys, random, json
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
+
 
 class MainWindow(QMainWindow):
 
@@ -70,7 +71,10 @@ class MainWindow(QMainWindow):
     def ui_Settings(self):
         self.clear_window()
         ToMain_Button = QPushButton("Назад")
+        FontTypeSetting = QFontComboBox()
         ToMain_Button.clicked.connect(self.gui_main_window)
+        FontTypeSetting.currentFontChanged.connect(lambda : print(">>"))
+        self.vbox.addWidget(FontTypeSetting, alignment=Qt.AlignmentFlag.AlignCenter)
         self.vbox.addWidget(ToMain_Button, alignment=Qt.AlignmentFlag.AlignCenter)
 
     def Exit_Button_event(self):
@@ -93,6 +97,9 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    with open("Settings.json", "r") as f:
+        Settings = json.load(f)
+    app.setFont(QFont(Settings['font_type'], Settings['font_size']))
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
