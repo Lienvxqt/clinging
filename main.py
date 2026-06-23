@@ -74,6 +74,7 @@ class MainWindow(QMainWindow):
         FontTypeSetting = QFontComboBox()
         ToMain_Button.clicked.connect(self.gui_main_window)
         FontTypeSetting.currentFontChanged.connect(lambda : print(">>"))
+        
         self.vbox.addWidget(FontTypeSetting, alignment=Qt.AlignmentFlag.AlignCenter)
         self.vbox.addWidget(ToMain_Button, alignment=Qt.AlignmentFlag.AlignCenter)
 
